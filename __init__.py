@@ -7,7 +7,8 @@ class AboutMisis(MycroftSkill):
 
     @intent_file_handler('misis.about.intent')
     def handle_misis_about(self, message):
-        self.speak_dialog('misis.about')
+        utt = message.data.get('utterance')
+        self.speak(utt)
 
 
 def create_skill():
