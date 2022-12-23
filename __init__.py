@@ -30,7 +30,7 @@ class AboutMisis(MycroftSkill):
         url = "http://misisrobot.live:8000/text-ask-text?question=" + utt
         r = requests.get(url)
         logging.info("Полученный ответ: " + r.text)
-        self.speak(utt)
+        self.speak(r.json()['answer'])
 
 def create_skill():
     return AboutMisis()
