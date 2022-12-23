@@ -10,7 +10,7 @@ class AboutMisis(MycroftSkill):
     @intent_file_handler('misis.about.intent')
     def handle_misis_about(self, message):
         utt = message.data.get('utterance')
-        logging.info("тип utterance: " + type(utt))
+        logging.info("тип utterance: " + str(type(utt)))
         utt = str(utt)
         logging.info("Полученный текст: " + utt)
         if(utt.find("вопрос о МИСиС") >= 0):
