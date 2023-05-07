@@ -47,6 +47,7 @@ class AboutMisis(MycroftSkill):
     def _load_model(self, config_path: str) -> Chainer:
         """Load or train deeppavlov model."""
         model_config = read_json(config_path)
+        model_config["dataset_reader"]["data_url"] = join(abspath(dirname(__file__)), "data", "dataset_misis_qa.csv")
         model_config["metadata"]["variables"]["ROOT_PATH"] = (
             self.ml_root_path
         )
