@@ -13,12 +13,12 @@ class AboutMisis(MycroftSkill):
         MycroftSkill.__init__(self)
         env_file = '.env'
         env_file_encoding = 'utf-8'
-        ml_root_path: str = Field(..., env="ML_ROOT_PATH")
+        ml_root_path = './data'
 
-        self.tmp_dir = Path(Field(..., env="TMP_DIR"))
+        self.tmp_dir = Path('./tmp_data')
         self.tmp_dir.mkdir(exist_ok=True, parents=True)
 
-        self._ml_path = Field(..., env="ML_CONFIG_FILE")
+        self._ml_path = './data/tfidf_logreg_autofaq_misis.json'
         self._predictor: Optional[Chainer] = None
 
     @intent_file_handler('misis.about.intent')
