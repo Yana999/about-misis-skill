@@ -1,11 +1,14 @@
 import logging
 
 from mycroft import MycroftSkill, intent_file_handler
-import requests
+from tools import VOATools
+from config import VOAConfig
 
 class AboutMisis(MycroftSkill):
     def __init__(self):
         MycroftSkill.__init__(self)
+        config = VOAConfig()  # type: ignore
+        voaTools = VOATools(config)
 
     @intent_file_handler('misis.about.intent')
     def handle_misis_about(self, message):
@@ -27,15 +30,16 @@ class AboutMisis(MycroftSkill):
             utt = utt[6:]
         if (utt.find("answer") >= 0):
             utt = utt[7:]
-        url = "http://misisrobot.live:8000/text-ask-text?question=" + utt
-        r = requests.get(url)
-        logging.info("Полученный ответ: " + r.text)
+        r = self.voaTools.voa_text(utt)
+        logging.info("Полученный ответ: " + r.a)
         self.speak(r.json()['answer'])
 
 def create_skill():
     return AboutMisis()
 
 # if __name__ == '__main__':
-#     url = "http://misisrobot.live:8000/text-ask-text?question=" + "направления"
-#     r = requests.get(url)
-#     print(r.json()['answer'])
+#     utt = 'направления'
+#     config = VOAConfig()  # type: ignore
+#     voaTools = VOATools(config)
+#     r = voaTools.voa_text(utt)
+#     print(r)
