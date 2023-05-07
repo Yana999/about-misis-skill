@@ -4,7 +4,8 @@ from typing import Optional
 
 from deeppavlov import Chainer, train_model, build_model
 from deeppavlov.core.common.file import read_json
-from mycroft import MycroftSkill, intent_file_handler
+from os.path import join, abspath, dirname
+# from mycroft import MycroftSkill, intent_file_handler
 from pydantic import Field
 
 
@@ -16,7 +17,7 @@ class AboutMisis(MycroftSkill):
         self.tmp_dir = Path('./tmp_data')
         self.tmp_dir.mkdir(exist_ok=True, parents=True)
 
-        self._ml_path = './data/tfidf_logreg_autofaq_misis.json'
+        self._ml_path = join(abspath(dirname(__file__)), "data", "tfidf_logreg_autofaq_misis.json")
         self._predictor: Optional[Chainer] = None
 
     @intent_file_handler('misis.about.intent')
@@ -89,7 +90,9 @@ class AboutMisis(MycroftSkill):
         answer = resp[0][0]
         score = resp[1][0]
         status = True
-        logging.info("Полученный ответ: " + answer + "\nScore: " + score)
+        logging.info("Полученный ответ: " + answer)
+        logging.info("Score: ")
+        logging.info(score)
         if not score:
             answer = default_answer
             status = False
