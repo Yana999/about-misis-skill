@@ -10,7 +10,7 @@ from pydantic import Field
 
 class AboutMisis(MycroftSkill):
     def __init__(self):
-        # MycroftSkill.__init__(self)
+        MycroftSkill.__init__(self)
         self.ml_root_path = './data'
 
         self.tmp_dir = Path('./tmp_data')
