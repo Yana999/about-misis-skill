@@ -41,7 +41,7 @@ class AboutMisis(MycroftSkill):
             utt = utt[7:]
         logging.info("вопрос для модели: " + utt)
         r = self.voa_text(utt)
-        self.speak(r.json()['answer'])
+        self.speak(r)
 
 
     def _load_model(self, config_path: str) -> Chainer:
