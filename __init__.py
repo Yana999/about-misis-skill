@@ -6,7 +6,7 @@ from deeppavlov import Chainer, train_model, build_model
 from deeppavlov.core.common.file import read_json
 from os.path import join, abspath, dirname
 from mycroft import MycroftSkill, intent_file_handler
-from pydantic import Field
+import sklearn
 
 
 class AboutMisis(MycroftSkill):
@@ -40,6 +40,7 @@ class AboutMisis(MycroftSkill):
         if (utt.find("answer") >= 0):
             utt = utt[7:]
         logging.info("вопрос для модели: " + utt)
+        logging.info("версия: " + sklearn.__version__)
         r = self.voa_text(utt)
         self.speak(r)
 
