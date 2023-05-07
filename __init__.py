@@ -10,10 +10,8 @@ from pydantic import Field
 
 class AboutMisis(MycroftSkill):
     def __init__(self):
-        MycroftSkill.__init__(self)
-        env_file = '.env'
-        env_file_encoding = 'utf-8'
-        ml_root_path = './data'
+        # MycroftSkill.__init__(self)
+        self.ml_root_path = './data'
 
         self.tmp_dir = Path('./tmp_data')
         self.tmp_dir.mkdir(exist_ok=True, parents=True)
@@ -24,7 +22,6 @@ class AboutMisis(MycroftSkill):
     @intent_file_handler('misis.about.intent')
     def handle_misis_about(self, message):
         utt = message.data.get('utterance')
-        logging.info("тип utterance: " + str(type(utt)))
         utt = str(utt)
         logging.info("Полученный текст: " + utt)
         if(utt.find("вопрос о МИСиС") >= 0):
@@ -41,8 +38,8 @@ class AboutMisis(MycroftSkill):
             utt = utt[6:]
         if (utt.find("answer") >= 0):
             utt = utt[7:]
+        logging.info("вопрос для модели: " + utt)
         r = self.voa_text(utt)
-        logging.info("Полученный ответ: " + r.a)
         self.speak(r.json()['answer'])
 
 
@@ -50,7 +47,7 @@ class AboutMisis(MycroftSkill):
         """Load or train deeppavlov model."""
         model_config = read_json(config_path)
         model_config["metadata"]["variables"]["ROOT_PATH"] = (
-            self.config.ml_root_path
+            self.ml_root_path
         )
         try:
             self._predictor = build_model(model_config, load_trained=True)
@@ -92,7 +89,7 @@ class AboutMisis(MycroftSkill):
         answer = resp[0][0]
         score = resp[1][0]
         status = True
-
+        logging.info("Полученный ответ: " + answer + "\nScore: " + score)
         if not score:
             answer = default_answer
             status = False
@@ -103,8 +100,7 @@ def create_skill():
     return AboutMisis()
 
 # if __name__ == '__main__':
+#     a = AboutMisis()
 #     utt = 'направления'
-#     config = VOAConfig()  # type: ignore
-#     voaTools = VOATools(config)
-#     r = voaTools.voa_text(utt)
+#     r = a.voa_text(utt)
 #     print(r)
