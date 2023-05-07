@@ -25,11 +25,11 @@ class AboutMisis(MycroftSkill):
         utt = message.data.get('utterance')
         utt = str(utt)
         logging.info("Полученный текст: " + utt)
-        if(utt.find("вопрос о МИСиС") >= 0):
+        if(utt.find("вопрос о мисис") >= 0):
             utt = utt[15:]
-        if (utt.find("о МИСиС") >= 0):
+        if (utt.find("о мисис") >= 0):
             utt = utt[8:]
-        if (utt.find("МИСиС") >= 0):
+        if (utt.find("мисис") >= 0):
             utt = utt[6:]
         if (utt.find("есть вопрос") >= 0):
             utt = utt[12:]
