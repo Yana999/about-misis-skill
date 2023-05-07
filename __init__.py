@@ -5,7 +5,7 @@ from typing import Optional
 from deeppavlov import Chainer, train_model, build_model
 from deeppavlov.core.common.file import read_json
 from os.path import join, abspath, dirname
-# from mycroft import MycroftSkill, intent_file_handler
+from mycroft import MycroftSkill, intent_file_handler
 from pydantic import Field
 
 
