@@ -41,7 +41,7 @@ class AboutMisis(MycroftSkill):
             utt = utt[6:]
         if (utt.find("answer") >= 0):
             utt = utt[7:]
-        r = self.voaTools.voa_text(utt)
+        r = self.voa_text(utt)
         logging.info("Полученный ответ: " + r.a)
         self.speak(r.json()['answer'])
 
