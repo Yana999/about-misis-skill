@@ -11,16 +11,14 @@ from pydantic import Field
 class AboutMisis(MycroftSkill):
     def __init__(self):
         MycroftSkill.__init__(self)
-        config = VOAConfig()  # type: ignore
         env_file = '.env'
         env_file_encoding = 'utf-8'
         ml_root_path: str = Field(..., env="ML_ROOT_PATH")
-        ml_config_path: str = Field(..., env="ML_CONFIG_FILE")
 
         self.tmp_dir = Path(Field(..., env="TMP_DIR"))
         self.tmp_dir.mkdir(exist_ok=True, parents=True)
 
-        self._ml_path = config.ml_config_path
+        self._ml_path = Field(..., env="ML_CONFIG_FILE")
         self._predictor: Optional[Chainer] = None
 
     @intent_file_handler('misis.about.intent')
