@@ -39,8 +39,9 @@ class AboutMisis(MycroftSkill):
             utt = utt[6:]
         if (utt.find("answer") >= 0):
             utt = utt[7:]
+        if (utt.find("миссис") >= 0):
+            utt = utt[7:]
         logging.info("вопрос для модели: " + utt)
-        logging.info("версия: " + sklearn.__version__)
         r = self.voa_text(utt)
         self.speak(r)
 
