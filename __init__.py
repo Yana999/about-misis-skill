@@ -7,6 +7,7 @@ from deeppavlov.core.common.file import read_json
 from os.path import join, abspath, dirname
 from mycroft import MycroftSkill, intent_file_handler
 import sklearn
+from mycroft_bus_client import MessageBusClient, Message
 
 
 class AboutMisis(MycroftSkill):
@@ -19,6 +20,8 @@ class AboutMisis(MycroftSkill):
 
         self._ml_path = join(abspath(dirname(__file__)), "data", "tfidf_logreg_autofaq_misis.json")
         self._predictor: Optional[Chainer] = None
+        self.client = MessageBusClient(host='192.168.1.36', port='8000', route='/')
+        self.client.run_in_thread()
 
     @intent_file_handler('misis.about.intent')
     def handle_misis_about(self, message):
@@ -41,6 +44,9 @@ class AboutMisis(MycroftSkill):
             utt = utt[7:]
         if (utt.find("миссис") >= 0):
             utt = utt[7:]
+        print('Setting up client to connect to a local mycroft instance')
+        logging.info("Отправляем сообщенрие-проверку")
+        self.client.emit(Message('eye', data={'check': 'question'}))
         logging.info("вопрос для модели: " + utt)
         r = self.voa_text(utt)
         self.speak(r)
