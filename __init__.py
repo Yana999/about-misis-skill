@@ -1,7 +1,6 @@
 import json
 import logging
 import socket
-import time
 from os.path import join, abspath, dirname
 from pathlib import Path
 from typing import Optional
@@ -9,7 +8,6 @@ from typing import Optional
 from deeppavlov import Chainer, train_model, build_model
 from deeppavlov.core.common.file import read_json
 from mycroft import MycroftSkill, intent_file_handler
-from mycroft_bus_client import MessageBusClient
 
 
 class AboutMisis(MycroftSkill):
@@ -28,45 +26,56 @@ class AboutMisis(MycroftSkill):
         self.BUFFER_SIZE = 128
         self.MESSAGE = json.dumps({'type': 'eye'})
 
-    def initialize(self):
-        self.client = MessageBusClient(host='192.168.1.36', port='8000', route='/')
-
-    def handle_check_eye(self, _):
-        self.is_eye = True
-
     @intent_file_handler('misis.about.intent')
     def handle_misis_about(self, message):
-        utt = message.data.get('utterance')
-        utt = str(utt)
-        logging.info("Полученный текст: " + utt)
-        if (utt.find("вопрос о мисис") >= 0):
-            utt = utt[15:]
-        if (utt.find("о мисис") >= 0):
-            utt = utt[8:]
-        if (utt.find("мисис") >= 0):
-            utt = utt[6:]
-        if (utt.find("есть вопрос") >= 0):
-            utt = utt[12:]
-        if (utt.find("хочу задать вопрос") >= 0):
-            utt = utt[19:]
-        if (utt.find("робот") >= 0):
-            utt = utt[6:]
-        if (utt.find("answer") >= 0):
-            utt = utt[7:]
-        if (utt.find("миссис") >= 0):
-            utt = utt[7:]
-        print('Setting up client to connect to a local mycroft instance')
+        try:
+            utt = message.data.get('utterance')
+            utt = str(utt)
+            logging.info("Полученный текст: " + utt)
+            if utt.find("вопрос о мисис") >= 0:
+                utt = utt[15:]
+            if utt.find("о мисис") >= 0:
+                utt = utt[8:]
+            if utt.find("мисис") >= 0:
+                utt = utt[6:]
+            if utt.find("есть вопрос") >= 0:
+                utt = utt[12:]
+            if utt.find("хочу задать вопрос") >= 0:
+                utt = utt[19:]
+            if utt.find("робот") >= 0:
+                utt = utt[6:]
+            if utt.find("answer") >= 0:
+                utt = utt[7:]
+            if utt.find("миссис") >= 0:
+                utt = utt[7:]
+            print('Setting up client to connect to a local mycroft instance')
+            if self.send_eye_check():
+                logging.info("Персона обнаружена")
+                logging.info("вопрос для модели: " + utt)
+                r = self.voa_text(utt)
+            else:
+                logging.info("Персона потеряна")
+                r = 'Пожалуйста, вернитесь в фокус зрения робота'
+        except (Exception, ConnectionError) as err:
+            logging.error("Произошела ошибка " + str(err))
+            r = 'Есть технический сбой, в моих системах произвожу перезагрузку'
+        self.speak(r)
+
+    def send_eye_check(self):
         logging.info("Отправляем сообщенрие-проверку")
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((self.TCP_IP, self.TCP_PORT))
         s.sendall(bytes(self.MESSAGE, encoding="utf-8"))
-        data = s.recv(self.BUFFER_SIZE)
-        logging.info("Ответ зрения:" + str(data))
+        data = str(s.recv(self.BUFFER_SIZE))
+        logging.info("Ответ зрения:" + data)
         s.close()
-        logging.info("вопрос для модели: " + utt)
-        r = self.voa_text(utt)
-        logging.info(self.is_eye)
-        self.speak(r)
+        if(data == 'in'):
+            return True
+        if(data == 'out'):
+            return False
+        else:
+            raise Exception('Неизвестный тип сообщения от зрения')
+        return data
 
     def _load_model(self, config_path: str) -> Chainer:
         """Load or train deeppavlov model."""
@@ -114,13 +123,11 @@ class AboutMisis(MycroftSkill):
 
         answer = resp[0][0]
         score = resp[1][0]
-        status = True
         logging.info("Полученный ответ: " + answer)
         logging.info("Score: ")
         logging.info(score)
         if not score:
             answer = default_answer
-            status = False
 
         return answer
 
