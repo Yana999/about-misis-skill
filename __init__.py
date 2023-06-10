@@ -20,8 +20,15 @@ class AboutMisis(MycroftSkill):
 
         self._ml_path = join(abspath(dirname(__file__)), "data", "tfidf_logreg_autofaq_misis.json")
         self._predictor: Optional[Chainer] = None
-        self.client = MessageBusClient(host='192.168.1.36', port='8000', route='/')
-        self.client.run_in_thread()
+        # self.bus = MessageBusClient(host='192.168.1.36', port='8000', route='/')
+        self.is_eye = False
+
+    def initialize(self):
+        self.add_event("skill.misis.about.eye", self.handle_check_eye)
+
+    def handle_check_eye(self, _):
+        self.is_eye = True
+
 
     @intent_file_handler('misis.about.intent')
     def handle_misis_about(self, message):
@@ -46,9 +53,10 @@ class AboutMisis(MycroftSkill):
             utt = utt[7:]
         print('Setting up client to connect to a local mycroft instance')
         logging.info("Отправляем сообщенрие-проверку")
-        self.client.emit(Message('eye', data={'check': 'question'}))
+        self.bus.emit(Message('skill.misis.about.eye', data={'check': 'question'}))
         logging.info("вопрос для модели: " + utt)
         r = self.voa_text(utt)
+        logging.info(self.is_eye)
         self.speak(r)
 
 
