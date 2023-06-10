@@ -96,12 +96,12 @@ class AboutMisis(MycroftSkill):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((self.TCP_IP, self.TCP_PORT))
         s.sendall(bytes(self.MESSAGE, encoding="utf-8"))
-        data = str(s.recv(self.BUFFER_SIZE))
+        data = s.recv(self.BUFFER_SIZE)
         logging.info("Ответ зрения:" + str(data))
         s.close()
-        if(data == b'in'):
+        if(data == 1):
             return True
-        if(data == b'out'):
+        if(data == 0):
             return False
         else:
             raise Exception('Неизвестный тип сообщения от зрения')
