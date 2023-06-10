@@ -96,7 +96,7 @@ class AboutMisis(MycroftSkill):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((self.TCP_IP, self.TCP_PORT))
         s.sendall(bytes(self.MESSAGE, encoding="utf-8"))
-        data = s.recv(self.BUFFER_SIZE)
+        data = s.recv(self.BUFFER_SIZE).decode('utf-8')
         logging.info("Ответ зрения:" + str(data))
         s.close()
         if(str(data) == '1'):
