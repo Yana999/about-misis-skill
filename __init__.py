@@ -29,9 +29,9 @@ class AboutMisis(MycroftSkill):
         self.to_person = 'Пожалуйста, вернитесь в фокус зрения робота'
         self.error_message = 'Есть технический сбой в моих системах произвожу перезагрузку'
 
-    # @intent_file_handler('misis.about.intent')
-    @intent_handler(AdaptIntent()
-                    .one_of("университет", "мисис", "вопрос"))
+    @intent_file_handler('misis.about.intent')
+    # @intent_handler(AdaptIntent()
+    #                 .one_of("университет", "мисис", "вопрос"))
     def handle_misis_about(self, message):
         try:
             utt = message.data.get('utterance')
@@ -66,8 +66,10 @@ class AboutMisis(MycroftSkill):
             r = self.error_message
         self.speak(r)
 
-    @intent_handler(AdaptIntent()
-                    .one_of("привет", "здравствуй", "добрый день", "добрый вечер", "приветствую", "доброе утро", "здравствуйте"))
+
+    # @intent_handler(AdaptIntent()
+    #                 .one_of("привет", "здравствуй", "добрый день", "добрый вечер", "приветствую", "доброе утро", "здравствуйте"))
+    @intent_file_handler('misis.about.hello')
     def say_hello(self):
         try:
             if(self.send_eye_check):
@@ -79,8 +81,9 @@ class AboutMisis(MycroftSkill):
             self.speak(self.error_message)
 
 
-    @intent_handler(AdaptIntent()
-                    .one_of("пока", "до свидания"))
+    # @intent_handler(AdaptIntent()
+    #                 .one_of("пока", "до свидания"))
+    @intent_file_handler('misis.about.bye')
     def say_hello(self):
         try:
             if (self.send_eye_check):
