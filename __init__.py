@@ -56,7 +56,6 @@ class AboutMisis(MycroftSkill):
         self.client.run_in_thread()
         self.client.emit(Message('skill.misis.about.eye', data={'check': 'question'}))
         logging.info("вопрос для модели: " + utt)
-        self.client.run_in_thread()
         r = self.voa_text(utt)
         logging.info(self.is_eye)
         self.speak(r)
