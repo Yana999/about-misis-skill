@@ -84,7 +84,7 @@ class AboutMisis(MycroftSkill):
     # @intent_handler(AdaptIntent()
     #                 .one_of("пока", "до свидания"))
     @intent_file_handler('misis.about.bye')
-    def say_hello(self):
+    def say_bye(self):
         try:
             if (self.send_eye_check):
                 self.speak("До свидания, было приятно пообщаться")
