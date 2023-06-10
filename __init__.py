@@ -8,6 +8,7 @@ from typing import Optional
 from deeppavlov import Chainer, train_model, build_model
 from deeppavlov.core.common.file import read_json
 from mycroft import MycroftSkill, intent_file_handler
+from mycroft.skills.intent_service import AdaptIntent
 
 
 class AboutMisis(MycroftSkill):
@@ -22,11 +23,15 @@ class AboutMisis(MycroftSkill):
         self._predictor: Optional[Chainer] = None
         self.is_eye = False
         self.TCP_IP = '192.168.1.101'
-        self.TCP_PORT = 8500
+        self.TCP_PORT = 5005
         self.BUFFER_SIZE = 128
         self.MESSAGE = json.dumps({'type': 'eye'})
+        self.to_person = 'Пожалуйста, вернитесь в фокус зрения робота'
+        self.error_message = 'Есть технический сбой в моих системах произвожу перезагрузку'
 
-    @intent_file_handler('misis.about.intent')
+    # @intent_file_handler('misis.about.intent')
+    @intent_handler(AdaptIntent()
+                    .one_of("университет", "мисис", "вопрос"))
     def handle_misis_about(self, message):
         try:
             utt = message.data.get('utterance')
@@ -55,11 +60,36 @@ class AboutMisis(MycroftSkill):
                 r = self.voa_text(utt)
             else:
                 logging.info("Персона потеряна")
-                r = 'Пожалуйста, вернитесь в фокус зрения робота'
+                r = self.to_person
         except (Exception, ConnectionError) as err:
             logging.error("Произошела ошибка " + str(err))
-            r = 'Есть технический сбой, в моих системах произвожу перезагрузку'
+            r = self.error_message
         self.speak(r)
+
+    @intent_handler(AdaptIntent()
+                    .one_of("привет", "здравствуй", "добрый день", "добрый вечер", "приветствую", "доброе утро", "здравствуйте"))
+    def say_hello(self):
+        try:
+            if(self.send_eye_check):
+                self.speak("рад видеть вас")
+            else:
+                self.speak(self.to_person)
+        except (Exception, ConnectionError) as err:
+            logging.error("Произошела ошибка " + str(err))
+            self.speak(self.error_message)
+
+
+    @intent_handler(AdaptIntent()
+                    .one_of("пока", "до свидания"))
+    def say_hello(self):
+        try:
+            if (self.send_eye_check):
+                self.speak("До свидания, было приятно пообщаться")
+            else:
+                self.speak(self.to_person)
+        except (Exception, ConnectionError) as err:
+            logging.error("Произошела ошибка " + str(err))
+            self.speak(self.error_message)
 
     def send_eye_check(self):
         logging.info("Отправляем сообщенрие-проверку")
