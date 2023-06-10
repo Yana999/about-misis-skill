@@ -1,16 +1,15 @@
+import json
 import logging
+import socket
+import time
+from os.path import join, abspath, dirname
 from pathlib import Path
 from typing import Optional
 
 from deeppavlov import Chainer, train_model, build_model
 from deeppavlov.core.common.file import read_json
-from os.path import join, abspath, dirname
 from mycroft import MycroftSkill, intent_file_handler
-import sklearn
-from mycroft_bus_client import MessageBusClient, Message
-import socket
-import time
-import json
+from mycroft_bus_client import MessageBusClient
 
 
 class AboutMisis(MycroftSkill):
@@ -27,22 +26,20 @@ class AboutMisis(MycroftSkill):
         self.TCP_IP = '192.168.1.101'
         self.TCP_PORT = 5005
         self.BUFFER_SIZE = 128
-        self.MESSAGE = json.dump({'type':'eye'})
+        self.MESSAGE = json.dumps({'type': 'eye'})
 
     def initialize(self):
         self.client = MessageBusClient(host='192.168.1.36', port='8000', route='/')
 
-
     def handle_check_eye(self, _):
         self.is_eye = True
-
 
     @intent_file_handler('misis.about.intent')
     def handle_misis_about(self, message):
         utt = message.data.get('utterance')
         utt = str(utt)
         logging.info("Полученный текст: " + utt)
-        if(utt.find("вопрос о мисис") >= 0):
+        if (utt.find("вопрос о мисис") >= 0):
             utt = utt[15:]
         if (utt.find("о мисис") >= 0):
             utt = utt[8:]
@@ -72,7 +69,6 @@ class AboutMisis(MycroftSkill):
         r = self.voa_text(utt)
         logging.info(self.is_eye)
         self.speak(r)
-
 
     def _load_model(self, config_path: str) -> Chainer:
         """Load or train deeppavlov model."""
@@ -129,6 +125,7 @@ class AboutMisis(MycroftSkill):
             status = False
 
         return answer
+
 
 def create_skill():
     return AboutMisis()
