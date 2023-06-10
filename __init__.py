@@ -22,7 +22,7 @@ class AboutMisis(MycroftSkill):
         self._predictor: Optional[Chainer] = None
         self.is_eye = False
         self.TCP_IP = '192.168.1.101'
-        self.TCP_PORT = 5005
+        self.TCP_PORT = 8500
         self.BUFFER_SIZE = 128
         self.MESSAGE = json.dumps({'type': 'eye'})
 
@@ -67,7 +67,7 @@ class AboutMisis(MycroftSkill):
         s.connect((self.TCP_IP, self.TCP_PORT))
         s.sendall(bytes(self.MESSAGE, encoding="utf-8"))
         data = str(s.recv(self.BUFFER_SIZE))
-        logging.info("Ответ зрения:" + data)
+        logging.info("Ответ зрения:" + str(data))
         s.close()
         if(data == 'in'):
             return True
