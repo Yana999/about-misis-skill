@@ -69,7 +69,7 @@ class AboutMisis(MycroftSkill):
 
     # @intent_handler(AdaptIntent()
     #                 .one_of("привет", "здравствуй", "добрый день", "добрый вечер", "приветствую", "доброе утро", "здравствуйте"))
-    @intent_file_handler('misis.about.hello')
+    @intent_file_handler('misis.about.hi')
     def say_hello(self):
         try:
             if(self.send_eye_check):
