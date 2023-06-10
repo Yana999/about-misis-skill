@@ -53,7 +53,6 @@ class AboutMisis(MycroftSkill):
             utt = utt[7:]
         print('Setting up client to connect to a local mycroft instance')
         logging.info("Отправляем сообщенрие-проверку")
-        self.client.run_in_thread()
         self.client.emit(Message('skill.misis.about.eye', data={'check': 'question'}))
         self.client.run_in_thread()
         logging.info("вопрос для модели: " + utt)
