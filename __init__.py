@@ -12,7 +12,7 @@ from mycroft_bus_client import MessageBusClient, Message
 
 class AboutMisis(MycroftSkill):
     def __init__(self):
-        MycroftSkill.__init__(self, "AboutMISISSkill", MessageBusClient(host='192.168.1.36', port='8000', route='/'))
+        MycroftSkill.__init__(self, "AboutMISISSkill")
         self.ml_root_path = './data'
 
         self.tmp_dir = Path('./tmp_data')
@@ -20,7 +20,7 @@ class AboutMisis(MycroftSkill):
 
         self._ml_path = join(abspath(dirname(__file__)), "data", "tfidf_logreg_autofaq_misis.json")
         self._predictor: Optional[Chainer] = None
-        # self.bus = MessageBusClient(host='192.168.1.36', port='8000', route='/')
+        self.bus = MessageBusClient(host='192.168.1.36', port='8000', route='/')
         self.is_eye = False
 
     def initialize(self):
