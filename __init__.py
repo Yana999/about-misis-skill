@@ -27,7 +27,7 @@ class AboutMisis(MycroftSkill):
         self.TCP_IP = '192.168.1.101'
         self.TCP_PORT = 5005
         self.BUFFER_SIZE = 128
-        self.MESSAGE = 'hi'
+        self.MESSAGE = json.dump({'type':'eye'})
 
     def initialize(self):
         self.client = MessageBusClient(host='192.168.1.36', port='8000', route='/')
