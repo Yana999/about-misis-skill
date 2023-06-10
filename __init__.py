@@ -69,9 +69,9 @@ class AboutMisis(MycroftSkill):
         data = str(s.recv(self.BUFFER_SIZE))
         logging.info("Ответ зрения:" + str(data))
         s.close()
-        if(data == 'in'):
+        if(data == b'in'):
             return True
-        if(data == 'out'):
+        if(data == b'out'):
             return False
         else:
             raise Exception('Неизвестный тип сообщения от зрения')
