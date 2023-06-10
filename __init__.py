@@ -8,6 +8,9 @@ from os.path import join, abspath, dirname
 from mycroft import MycroftSkill, intent_file_handler
 import sklearn
 from mycroft_bus_client import MessageBusClient, Message
+import socket
+import time
+import json
 
 
 class AboutMisis(MycroftSkill):
@@ -21,6 +24,10 @@ class AboutMisis(MycroftSkill):
         self._ml_path = join(abspath(dirname(__file__)), "data", "tfidf_logreg_autofaq_misis.json")
         self._predictor: Optional[Chainer] = None
         self.is_eye = False
+        self.TCP_IP = '192.168.1.101'
+        self.TCP_PORT = 5005
+        self.BUFFER_SIZE = 128
+        self.MESSAGE = 'hi'
 
     def initialize(self):
         self.client = MessageBusClient(host='192.168.1.36', port='8000', route='/')
@@ -53,8 +60,14 @@ class AboutMisis(MycroftSkill):
             utt = utt[7:]
         print('Setting up client to connect to a local mycroft instance')
         logging.info("Отправляем сообщенрие-проверку")
-        self.client.run_in_thread()
-        self.client.emit(Message('skill.misis.about.eye', data={'check': 'question'}))
+        # self.client.run_in_thread()
+        # self.client.emit(Message('skill.misis.about.eye', data={'check': 'question'}))
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect((self.TCP_IP, self.TCP_PORT))
+        s.sendall(bytes(self.MESSAGE, encoding="utf-8"))
+        time.sleep(1)
+        data = s.recv(self.BUFFER_SIZE)
+        s.close()
         logging.info("вопрос для модели: " + utt)
         r = self.voa_text(utt)
         logging.info(self.is_eye)
