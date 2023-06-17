@@ -57,13 +57,13 @@ class AboutMisis(MycroftSkill):
             if utt.find("миссис") >= 0:
                 utt = utt[7:]
             print('Setting up client to connect to a local mycroft instance')
-            if self.send_eye_check():
-                logging.info("Персона обнаружена")
-                logging.info("вопрос для модели: " + utt)
-                r = self.voa_text(utt)
-            else:
-                logging.info("Персона потеряна")
-                r = self.to_person
+            # if self.send_eye_check():
+            #     logging.info("Персона обнаружена")
+            #     logging.info("вопрос для модели: " + utt)
+            r = self.voa_text(utt)
+            # else:
+            #     logging.info("Персона потеряна")
+            #     r = self.to_person
         except (Exception, ConnectionError) as err:
             logging.error("Произошела ошибка " + str(err))
             r = self.error_message
