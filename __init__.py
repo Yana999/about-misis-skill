@@ -4,6 +4,9 @@ import socket
 from os.path import join, abspath, dirname
 from pathlib import Path
 from typing import Optional
+from deeppavlov import configs
+from deeppavlov.core.common.file import read_json
+from deeppavlov import configs, train_model
 
 from deeppavlov import Chainer, train_model, build_model
 from deeppavlov.core.common.file import read_json
@@ -112,15 +115,17 @@ class AboutMisis(MycroftSkill):
 
     def _load_model(self, config_path: str) -> Chainer:
         """Load or train deeppavlov model."""
-        model_config = read_json(config_path)
-        model_config["dataset_reader"]["data_url"] = join(abspath(dirname(__file__)), "data", "dataset_misis_qa.csv")
-        model_config["metadata"]["variables"]["ROOT_PATH"] = (
-            self.ml_root_path
-        )
+        model_config = read_json(configs.doc_retrieval.ru_ranker_tfidf_wiki)
+        model_config["dataset_reader"]["data_path"] = join(abspath(dirname(__file__)), "data", "misis_site")
+        model_config["dataset_reader"]["dataset_format"] = "txt"
+        model_config["train"]["batch_size"] = 1
+
         try:
-            self._predictor = build_model(model_config, load_trained=True)
+            doc_retrieval = train_model(model_config)
+            squad = build_model(join(abspath(dirname(__file__)), "data", "squad_ru_bert.json"), download=True)
+            self._predictor = build_model(join(abspath(dirname(__file__)), "data", "ru_odqa_infer_wiki.json"), download=False)
         except FileNotFoundError:
-            self._predictor = train_model(model_config, download=True)
+            logging.warning("Невозможно загрузить модель")
         return self._predictor
 
     def load_model(self, config_path: Optional[str] = None) -> Chainer:
@@ -152,14 +157,10 @@ class AboutMisis(MycroftSkill):
             VOAPredictionResult: result.
         """
         predictor = self.load_model()
-        resp = predictor([question])
+        answer = predictor([question])
 
-        answer = resp[0][0]
-        score = resp[1][0]
         logging.info("Полученный ответ: " + answer)
-        logging.info("Score: ")
-        logging.info(score)
-        if not score:
+        if not answer or answer == '':
             answer = default_answer
 
         return answer
