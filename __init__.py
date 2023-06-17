@@ -72,7 +72,7 @@ class AboutMisis(MycroftSkill):
     @intent_file_handler('misis.about.hi')
     def say_hello(self):
         try:
-            if(self.send_eye_check):
+            if self.send_eye_check():
                 self.speak("рад видеть вас")
             else:
                 self.speak(self.to_person)
@@ -86,7 +86,7 @@ class AboutMisis(MycroftSkill):
     @intent_file_handler('misis.about.bye')
     def say_bye(self):
         try:
-            if (self.send_eye_check):
+            if self.send_eye_check():
                 self.speak("До свидания, было приятно пообщаться")
             else:
                 self.speak(self.to_person)
