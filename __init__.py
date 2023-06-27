@@ -7,7 +7,7 @@ from typing import Optional
 from deeppavlov import configs
 from deeppavlov.core.common.file import read_json
 from deeppavlov import configs, train_model
-
+import openai
 from deeppavlov import Chainer, train_model, build_model
 from deeppavlov.core.common.file import read_json
 from mycroft import MycroftSkill, intent_file_handler, intent_handler
@@ -21,7 +21,7 @@ class AboutMisis(MycroftSkill):
 
         self.tmp_dir = Path('./tmp_data')
         self.tmp_dir.mkdir(exist_ok=True, parents=True)
-
+        self.openai.api_key = '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'
         self._ml_path = join(abspath(dirname(__file__)), "data", "tfidf_logreg_autofaq_misis.json")
         self._predictor: Optional[Chainer] = None
         self.is_eye = False
@@ -69,6 +69,15 @@ class AboutMisis(MycroftSkill):
             r = self.error_message
         self.speak(r)
 
+    def ask_gpt(self, question):
+        if question:
+            question = question + ' университет МИСИС'
+            messages = [{"role": "user", "content": question}]
+            chat = openai.ChatCompletion.create(
+                    model="gpt-3.5-turbo", messages=messages
+            )
+        reply = chat.choices[0].message.content
+        print(f"ChatGPT: {reply}")
 
     # @intent_handler(AdaptIntent()
     #                 .one_of("привет", "здравствуй", "добрый день", "добрый вечер", "приветствую", "доброе утро", "здравствуйте"))
