@@ -21,7 +21,7 @@ class AboutMisis(MycroftSkill):
 
         self.tmp_dir = Path('./tmp_data')
         self.tmp_dir.mkdir(exist_ok=True, parents=True)
-        self.openai.api_key = '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'
+        openai.api_key = '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'
         self._ml_path = join(abspath(dirname(__file__)), "data", "tfidf_logreg_autofaq_misis.json")
         self._predictor: Optional[Chainer] = None
         self.is_eye = False
