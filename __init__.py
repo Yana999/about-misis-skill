@@ -60,7 +60,7 @@ class AboutMisis(MycroftSkill):
             if self.send_eye_check():
                 logging.info("Персона обнаружена")
                 logging.info("вопрос для модели: " + utt)
-                r = self.voa_text(utt)
+                r = self.ask_gpt(utt)
             else:
                 logging.info("Персона потеряна")
                 r = self.to_person
@@ -152,28 +152,28 @@ class AboutMisis(MycroftSkill):
             self._ml_path = config_path
         return predictor
 
-    def voa_text(
-            self,
-            question: str,
-            default_answer: str = "Извините, не совсем поняла ваш вопрос."
-    ) -> str:
-        """Answer the text question.
-
-        Args:
-            question (str, Path): Question.
-            default_answer (str): Answer if question is not recognized.
-
-        Returns:
-            VOAPredictionResult: result.
-        """
-        predictor = self.load_model()
-        answer = predictor([question])
-
-        logging.info("Полученный ответ: " + answer)
-        if not answer or answer == '':
-            answer = default_answer
-
-        return answer
+    # def voa_text(
+    #         self,
+    #         question: str,
+    #         default_answer: str = "Извините, не совсем поняла ваш вопрос."
+    # ) -> str:
+    #     """Answer the text question.
+    #
+    #     Args:
+    #         question (str, Path): Question.
+    #         default_answer (str): Answer if question is not recognized.
+    #
+    #     Returns:
+    #         VOAPredictionResult: result.
+    #     """
+    #     predictor = self.load_model()
+    #     answer = predictor([question])
+    #
+    #     logging.info("Полученный ответ: " + answer)
+    #     if not answer or answer == '':
+    #         answer = default_answer
+    #
+    #     return answer
 
 
 def create_skill():
