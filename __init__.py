@@ -57,13 +57,13 @@ class AboutMisis(MycroftSkill):
             if utt.find("миссис") >= 0:
                 utt = utt[7:]
             print('Setting up client to connect to a local mycroft instance')
-            # if self.send_eye_check():
-            #     logging.info("Персона обнаружена")
-            #     logging.info("вопрос для модели: " + utt)
-            r = self.voa_text(utt)
-            # else:
-            #     logging.info("Персона потеряна")
-            #     r = self.to_person
+            if self.send_eye_check():
+                logging.info("Персона обнаружена")
+                logging.info("вопрос для модели: " + utt)
+                r = self.voa_text(utt)
+            else:
+                logging.info("Персона потеряна")
+                r = self.to_person
         except (Exception, ConnectionError) as err:
             logging.error("Произошела ошибка " + str(err))
             r = self.error_message
@@ -107,20 +107,21 @@ class AboutMisis(MycroftSkill):
             self.speak(self.error_message)
 
     def send_eye_check(self):
-        logging.info("Отправляем сообщенрие-проверку")
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect((self.TCP_IP, self.TCP_PORT))
-        s.sendall(bytes(self.MESSAGE, encoding="utf-8"))
-        data = s.recv(self.BUFFER_SIZE).decode('utf-8')
-        logging.info("Ответ зрения:" + str(data))
-        s.close()
-        if(str(data) == '1'):
-            return True
-        if(str(data) == '0'):
-            return False
-        else:
-            raise Exception('Неизвестный тип сообщения от зрения')
-        return data
+        # logging.info("Отправляем сообщенрие-проверку")
+        # s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        # s.connect((self.TCP_IP, self.TCP_PORT))
+        # s.sendall(bytes(self.MESSAGE, encoding="utf-8"))
+        # data = s.recv(self.BUFFER_SIZE).decode('utf-8')
+        # logging.info("Ответ зрения:" + str(data))
+        # s.close()
+        # if(str(data) == '1'):
+        #     return True
+        # if(str(data) == '0'):
+        #     return False
+        # else:
+        #     raise Exception('Неизвестный тип сообщения от зрения')
+        # return data
+        return 'yes'
 
     def _load_model(self, config_path: str) -> Chainer:
         """Load or train deeppavlov model."""
