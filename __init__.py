@@ -27,7 +27,7 @@ class AboutMisis(MycroftSkill):
         self.to_person = 'Пожалуйста, вернитесь в фокус зрения робота'
         self.error_message = 'Есть технический сбой в моих системах произвожу перезагрузку'
 
-    @intent_handler('misis.about.intent')
+    @intent_handler('misis.about.intent.intent')
     def handle_misis_about(self, message):
         try:
             utt = message.data.get('utterance')
@@ -62,7 +62,7 @@ class AboutMisis(MycroftSkill):
             r = self.error_message
         self.speak(r)
 
-    @intent_handler('misis.about.hi')
+    @intent_handler('misis.about.hi.intent')
     def say_hello(self):
         try:
             if self.send_eye_check():
@@ -73,7 +73,7 @@ class AboutMisis(MycroftSkill):
             logging.error("Произошела ошибка " + str(err))
             self.speak(self.error_message)
 
-    @intent_handler('misis.about.bye')
+    @intent_handler('misis.about.bye.intent')
     def say_bye(self):
         try:
             if self.send_eye_check():
