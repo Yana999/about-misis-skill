@@ -8,12 +8,12 @@ import time
 
 from deeppavlov import Chainer, train_model, build_model
 from deeppavlov.core.common.file import read_json
-from mycroft import MycroftSkill, intent_file_handler
+# from mycroft import MycroftSkill, intent_file_handler
 
 
-class AboutMisis(MycroftSkill):
+class AboutMisis:
     def __init__(self):
-        MycroftSkill.__init__(self, "AboutMISISSkill")
+        # MycroftSkill.__init__(self, "AboutMISISSkill")
         self.ml_root_path = './data'
         self.tmp_dir = Path('./tmp_data')
         self.tmp_dir.mkdir(exist_ok=True, parents=True)
@@ -27,7 +27,7 @@ class AboutMisis(MycroftSkill):
         self.to_person = 'Пожалуйста, вернитесь в фокус зрения робота'
         self.error_message = 'Есть технический сбой в моих системах произвожу перезагрузку'
 
-    @intent_file_handler('misis.about.intent')
+    # @intent_file_handler('misis.about.intent')
     # @intent_handler(AdaptIntent()
     #                 .one_of("университет", "мисис", "вопрос"))
     def handle_misis_about(self, message):
@@ -66,7 +66,7 @@ class AboutMisis(MycroftSkill):
 
     # @intent_handler(AdaptIntent()
     #                 .one_of("привет", "здравствуй", "добрый день", "добрый вечер", "приветствую", "доброе утро", "здравствуйте"))
-    @intent_file_handler('misis.about.hi')
+    # @intent_file_handler('misis.about.hi')
     def say_hello(self):
         try:
             if self.send_eye_check():
@@ -79,7 +79,7 @@ class AboutMisis(MycroftSkill):
 
     # @intent_handler(AdaptIntent()
     #                 .one_of("пока", "до свидания"))
-    @intent_file_handler('misis.about.bye')
+    # @intent_file_handler('misis.about.bye')
     def say_bye(self):
         try:
             if self.send_eye_check():
@@ -110,7 +110,7 @@ class AboutMisis(MycroftSkill):
     def _load_model(self, config_path: str) -> Chainer:
         """Load or train deeppavlov model."""
         model_config = read_json(config_path)
-        model_config["dataset_reader"]["data_url"] = join(abspath(dirname(__file__)), "data", "dataset_misis_qa.csv")
+        model_config["dataset_reader"]["data_url"] = join(abspath(dirname(__file__)), "data", "07042023_dataset_sort_povtor.csv")
         model_config["metadata"]["variables"]["ROOT_PATH"] = (
             self.ml_root_path
         )
@@ -164,8 +164,8 @@ class AboutMisis(MycroftSkill):
 def create_skill():
     return AboutMisis()
 
-# if __name__ == '__main__':
-#     a = AboutMisis()
-#     utt = 'направления'
-#     r = a.voa_text(utt)
-#     print(r)
+if __name__ == '__main__':
+    a = AboutMisis()
+    utt = 'направления'
+    r = a.voa_text(utt)
+    print(r)
