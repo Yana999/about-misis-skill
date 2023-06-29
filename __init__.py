@@ -64,9 +64,9 @@ class AboutMisis(MycroftSkill):
             r = self.error_message
         self.speak(r)
 
-    @intent_handler(AdaptIntent()
+    # @intent_handler(AdaptIntent()
     #                 .one_of("привет", "здравствуй", "добрый день", "добрый вечер", "приветствую", "доброе утро", "здравствуйте"))
-    # @intent_file_handler('misis.about.hi')
+    @intent_file_handler('misis.about.hi')
     def say_hello(self):
         try:
             if self.send_eye_check():
