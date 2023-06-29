@@ -1,4 +1,4 @@
 # для core - QA
-deeppavlov==1.2.0
+deeppavlov==1.0.0rc
 pydantic==1.9.0
 scikit-learn==1.0.2
