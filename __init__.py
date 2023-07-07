@@ -178,10 +178,12 @@ class AboutMisis(MycroftSkill):
                                                truncation=True, return_tensors='pt')
         input_ids = encoded_review['input_ids'].to(self.device)
         attention_mask = encoded_review['attention_mask'].to(self.device)
+        logging.info("Загрузка модели")
         predictor = self.load_model()
         output = predictor(input_ids, attention_mask)
         _, prediction = torch.max(output, dim=1)
 
+        logging.info("лематизация")
         tToken = self.lemmatize(question)
         tq = []
         index = 0
@@ -191,7 +193,7 @@ class AboutMisis(MycroftSkill):
         questions = []
         # import main df
         df = pd.read_excel(dataset)
-
+        logging.info("цикл")
         for i in range(0, len(df)):
             if (probability <= self.mySort(tToken, eval(str(df['tq_fix'][i]))) and df['label'][i] == int(prediction)):
                 tq = eval(str(df['tq_fix'][i]))
@@ -269,5 +271,8 @@ def create_skill():
 # if __name__ == '__main__':
 #     a = AboutMisis()
 #     utt = 'как подать ддокументы'
+#     r = a.make_ans(utt, a.dataset)
+#     print(r)
+#     utt = 'как оплатить обучение'
 #     r = a.make_ans(utt, a.dataset)
 #     print(r)
