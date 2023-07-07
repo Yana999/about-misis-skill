@@ -141,6 +141,8 @@ class AboutMisis(MycroftSkill):
 
         if not config_path:
             config_path = self._ml_path
+        logging.info((config_path))
+        logging.info(self._ml_path)
         predictor = self._load_lev_model(config_path)
 
         if config_path != self._ml_path:
